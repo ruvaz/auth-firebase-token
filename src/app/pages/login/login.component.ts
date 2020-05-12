@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.auth.login(this.usuario)
+    this.auth.doLogin(this.usuario)
       .subscribe(resp=>{
         console.log(resp);
       },(err)=>{
