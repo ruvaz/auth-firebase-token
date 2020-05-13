@@ -14,6 +14,7 @@ import Swal from "sweetalert2";
 export class RegistroComponent implements OnInit {
 
   usuario: UsuarioModel;
+  recordar:false;
 
   constructor(private auth: AuthService,
               private route:Router) {
@@ -22,8 +23,11 @@ export class RegistroComponent implements OnInit {
 
   ngOnInit() {
     this.usuario = new UsuarioModel();
-    this.usuario.email = 'ruvaz@me.com';
-    this.usuario.nombre = "Ruben Vazquez"
+    // this.usuario.email = 'ruvaz@me.com';
+    // this.usuario.nombre = "Ruben Vazquez"
+    if (this.recordar) {
+      localStorage.setItem('email', this.usuario.email);
+    }
   }
 
 

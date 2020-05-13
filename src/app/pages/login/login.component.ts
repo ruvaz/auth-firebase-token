@@ -14,12 +14,17 @@ import {AuthService} from "../../services/auth.service";
 export class LoginComponent implements OnInit {
 
   usuario: UsuarioModel = new UsuarioModel();
+  recordar = false;
 
   constructor(private  auth: AuthService,
               private route: Router) {
   }
 
   ngOnInit() {
+    if (localStorage.getItem('email')) {
+      this.usuario.email = localStorage.getItem('email');
+      this.recordar=true;
+    }
   }
 
   login(form: NgForm) {
@@ -28,29 +33,29 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    Swal.fire({
-      icon: 'info',
-      allowOutsideClick: false,
-      type: 'info',
-      text: 'Espere por favor...'
-    });
+    Swal.fire('Espere por favor...',
+      'Cargando..',
+      'info'
+    );
     Swal.showLoading();
 
     this.auth.doLogin(this.usuario)
       .subscribe(resp => {
         // login valido
-        console.log(resp);
+        if (this.recordar) {
+          localStorage.setItem('email', this.usuario.email);
+        }
         Swal.close();
         this.route.navigateByUrl('/home');
       }, (err) => {
         //Login Invalido
         console.log(err.error.error.message);
-        Swal.fire({
-          icon: 'error',
-          type: 'error',
-          title: 'Error al autenticar',
-          text: err.error.error.message
-        });
+        let error = err.error.error.message;
+        Swal.fire(
+          'Error al autenticar',
+          error,
+          'error'
+        );
       });
   }
 
